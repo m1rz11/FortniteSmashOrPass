@@ -6,43 +6,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Fortnite Smash or Pass</title>
 </head>
-<body>
+<body class="bg-light bg-gradient">
+<h6 class="text-center mt-3 fw-bold">Fortnite Smash or Pass</code>
 <h1 id="loadmsg" class="text-center mt-3 fw-bold">Fetching data, please wait...</h1>
 <div class="container text-center" id="main" style="display: none">
 
-    <img class="rounded mt-3 img-fluid shadow" id="image" src="">
+    <img class="rounded mt-3 img-fluid shadow bg-white bg-gradient" id="image" src="">
     <h1 class="display-5 fw-bold mt-3" id="name"></h1>
     <p class="mb-3" id="description"></code>
 
+    <div class="d-flex mb-1 w-100 flex-row">
+        <button class="p-3 m-1 w-25 btn btn-lg bg-gradient fw-bold btn-secondary counter" id="smashcounter" data-bs-toggle="collapse" data-bs-target="#smashlist-collapse" aria-expanded="false">0</button>
+        <button class="p-3 m-1 w-25 btn btn-lg bg-gradient fw-bold btn-success" id="smashbutton" onclick="smash()">Smash</button>
+        <button class="p-3 m-1 w-25 btn btn-lg bg-gradient fw-bold btn-danger" id="passbutton" onclick="pass()">Pass</button>
+        <button class="p-3 m-1 w-25 btn btn-lg bg-gradient fw-bold btn-secondary counter" id="passcounter" data-bs-toggle="collapse" data-bs-target="#passlist-collapse" aria-expanded="false">0</button>
+    </div>
     <div class="d-flex mb-3 w-100 flex-row">
-        <button class="p-3 m-1 w-25 btn btn-lg btn-secondary counter" id="smashcounter" data-bs-toggle="collapse" data-bs-target="#smashlist-collapse" aria-expanded="false">0</button>
-        <button class="p-3 m-1 w-25 btn btn-lg btn-success" id="smashbutton" onclick="smash()">&lt Smash</button>
-        <button class="p-3 m-1 w-25 btn btn-lg btn-danger" id="passbutton" onclick="pass()">Pass &gt</button>
-        <button class="p-3 m-1 w-25 btn btn-lg btn-secondary counter" id="passcounter" data-bs-toggle="collapse" data-bs-target="#passlist-collapse" aria-expanded="false">0</button>
+        <code class="w-25">Pass list</code>
+        <code class="w-25">&lt-</code>
+        <code class="w-25">-&gt</code>
+        <code class="w-25">Smash list</code>
     </div>
 
     <div class="collapse mb-3" id="smashlist-collapse">
         <br><h3 class="fw-bold">Smash list</h3>
         <div class="card card-body">
-            <p id="smashlist"></p>
+            <div id="smashlist" class="row">
+            </div>
         </div>
     </div>
     <div class="collapse mb-3" id="passlist-collapse">
         <br><h3 class="fw-bold">Pass list</h3>
         <div class="card card-body">
-            <p id="passlist"></p>
+            <div id="passlist" class="row">
+            </div>
         </div>
     </div>
 
     <p class="fst-italic" id="totalcounter"></p>
-    <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#options-collapse" aria-expanded="false">Options</button>
+    <button class="btn btn-primary bg-gradient" data-bs-toggle="collapse" data-bs-target="#options-collapse" aria-expanded="false">Options</button>
 
     <div class="collapse mb-3" id="options-collapse">
         <br>
         <div class="card card-body">
-            <button class="btn m-1 btn-primary" onclick="download('smashlist.txt', smashListStr.replaceAll(`<br>`, `\n`))">Download smash list</button>
-            <button class="btn m-1 btn-primary" onclick="download('passlist.txt', passListStr.replaceAll(`<br>`, `\n`))">Download pass list</button>
-            <button class="btn m-1 btn-danger" onclick="if(confirm('Are you sure? This will reset all progress.')){clearData();location.reload();}">Delete all data</button>
+            <button class="btn m-1 bg-gradient btn-primary" onclick="download('smashlist.txt', smashListStr.replaceAll(`<br>`, `\n`))">Download smash list</button>
+            <button class="btn m-1 bg-gradient btn-primary" onclick="download('passlist.txt', passListStr.replaceAll(`<br>`, `\n`))">Download pass list</button>
+            <button class="btn m-1 bg-gradient btn-danger" onclick="if(confirm('Are you sure? This will reset all progress.')){clearData();location.reload();}">Delete all data</button>
         </div>
     </div>
 

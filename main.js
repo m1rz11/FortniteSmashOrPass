@@ -17,6 +17,18 @@ let totalCounter = document.getElementById('totalcounter');
 let smashCounter = document.getElementById('smashcounter');
 let passCounter = document.getElementById('passcounter');
 
+const jumpAnim= [
+    {transform: "none"},
+    {transform: "translate(0px, -15px)"},
+    {transform: "translate(0px, -20px)"},
+    {transform: "translate(0px, -15px)"},
+    {transform: "none"}
+];
+
+const jumpAnimTiming = {
+    duration: 300, iterations: 1, 
+}
+
 function init(){
     getOutfitList().then(result => {
         outfitList = result;
@@ -49,21 +61,32 @@ function pickRandomOutfit() {
     passCounter.innerText = passList.length;
 }
 
+function getOutfitDiv(name, image) {
+    return `
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+            <img class="rounded img-fluid shadow-sm object-fit-contain w-100" src="`+image+`">
+            <p class="fs-6">`+name+`</p>
+        </div>
+    `;
+}
+
 function smash() {
     const outfit = outfitList.splice(current,1)[0];
     smashList.unshift(outfit);
-    smashListStr += outfit.item.name + '<br>';
+    smashListStr += getOutfitDiv(outfit.item.name, outfit.item.images.information);
     smashListElem.innerHTML = smashListStr;
     datasaved = false;
+    smashCounter.animate(jumpAnim, jumpAnimTiming);
     pickRandomOutfit();
 }
 
 function pass() {
     const outfit = outfitList.splice(current,1)[0];
     passList.unshift(outfit);
-    passListStr += outfit.item.name + '<br>';
+    passListStr += getOutfitDiv(outfit.item.name, outfit.item.images.information);
     passListElem.innerHTML = passListStr;
     datasaved = false;
+    passCounter.animate(jumpAnim, jumpAnimTiming);
     pickRandomOutfit();
 }
 
@@ -96,7 +119,7 @@ function loadData(){
             for (let o in outfitList){
                 if (currid === outfitList[o].itemId){
                     smashList.push(outfitList[o]);
-                    smashListStr += outfitList[o].item.name+'<br>';
+                    smashListStr += getOutfitDiv(outfitList[o].item.name, outfitList[o].item.images.information);
                     outfitList.splice(o,1);
                     smashids.splice(i, 1);
 
@@ -113,7 +136,7 @@ function loadData(){
             for (let o in outfitList){
                 if (currid === outfitList[o].itemId){
                     passList.push(outfitList[o]);
-                    passListStr += outfitList[o].item.name+'<br>';
+                    passListStr += getOutfitDiv(outfitList[o].item.name, outfitList[o].item.images.information);
                     outfitList.splice(o,1);
                     passids.splice(i, 1);
 
@@ -148,6 +171,7 @@ function download(filename, text) {
 async function getOutfitList() {
     // get latest items list from fortnite api
     const itemList = (await (await fetch(`https://fortnite-api.theapinetwork.com/items/list`)).json()).data;
+    //const itemList = (await (await fetch(`list.json`)).json()).data;
 
     outfitList = [];
 
