@@ -11,6 +11,7 @@ let datasaved = true;
 let outfitImage = document.getElementById('image');
 let outfitName = document.getElementById('name');
 let outfitDescription = document.getElementById('description');
+let outfitInfo = document.getElementById('info');
 let smashListElem = document.getElementById('smashlist');
 let passListElem = document.getElementById('passlist');
 let totalCounter = document.getElementById('totalcounter');
@@ -43,16 +44,21 @@ function init(){
 
 function pickRandomOutfit() {
     current = Math.floor(Math.random() * outfitList.length);
-    const outfit = outfitList[current].item;
+    const outfit = outfitList[current];
 
     try {
+        outfitInfo.innerText = 
+        `${outfit.rarity ? outfit.rarity.displayValue : ""}
+        ${outfit.set ? outfit.set.value : ""}
+        ${outfit.introduction ? outfit.introduction.text : ""}`;
+
         outfitName.innerText = outfit.name;
         outfitDescription.innerText = outfit.description;
-        outfitImage.src = outfit.images.information;
+        outfitImage.src = outfit.images.icon;
     } catch (e) {
-        document.getElementById('smashbutton').remove();
-        document.getElementById('passbutton').remove();
-        outfitName.innerText = smashList.length > passList.length ? 'Now go touch some grass' : 'gg';
+        document.getElementById('smashbutton').disabled = true;
+        document.getElementById('passbutton').disabled = true;
+        outfitName.innerText = smashList.length > passList.length ? 'now go touch some grass' : 'Victory Royale =)';
         outfitDescription.innerText = "";
         outfitImage.src = 'https://media.tenor.com/qmhJIwtzERoAAAAd/the-rock-purx124.gif';
     }
@@ -73,7 +79,7 @@ function getOutfitDiv(name, image) {
 function smash() {
     const outfit = outfitList.splice(current,1)[0];
     smashList.unshift(outfit);
-    smashListStr += getOutfitDiv(outfit.item.name, outfit.item.images.information);
+    smashListStr += getOutfitDiv(outfit.name, outfit.images.icon);
     smashListElem.innerHTML = smashListStr;
     datasaved = false;
     smashCounter.animate(jumpAnim, jumpAnimTiming);
@@ -83,7 +89,7 @@ function smash() {
 function pass() {
     const outfit = outfitList.splice(current,1)[0];
     passList.unshift(outfit);
-    passListStr += getOutfitDiv(outfit.item.name, outfit.item.images.information);
+    passListStr += getOutfitDiv(outfit.name, outfit.images.icon);
     passListElem.innerHTML = passListStr;
     datasaved = false;
     passCounter.animate(jumpAnim, jumpAnimTiming);
@@ -95,10 +101,10 @@ function saveData(){
     let passids = [];
 
     smashList.forEach(outfit => {
-        smashids.push(outfit.itemId);
+        smashids.push(outfit.id);
     });
     passList.forEach(outfit => {
-        passids.push(outfit.itemId);
+        passids.push(outfit.id);
     });
 
     localStorage.setItem('smashlist', JSON.stringify(smashids));
@@ -117,9 +123,9 @@ function loadData(){
             const currid = smashids[i];
 
             for (let o in outfitList){
-                if (currid === outfitList[o].itemId){
+                if (currid === outfitList[o].id){
                     smashList.push(outfitList[o]);
-                    smashListStr += getOutfitDiv(outfitList[o].item.name, outfitList[o].item.images.information);
+                    smashListStr += getOutfitDiv(outfitList[o].name, outfitList[o].images.icon);
                     outfitList.splice(o,1);
                     smashids.splice(i, 1);
 
@@ -134,9 +140,9 @@ function loadData(){
             const currid = passids[i];
 
             for (let o in outfitList){
-                if (currid === outfitList[o].itemId){
+                if (currid === outfitList[o].id){
                     passList.push(outfitList[o]);
-                    passListStr += getOutfitDiv(outfitList[o].item.name, outfitList[o].item.images.information);
+                    passListStr += getOutfitDiv(outfitList[o].name, outfitList[o].images.icon);
                     outfitList.splice(o,1);
                     passids.splice(i, 1);
 
@@ -170,18 +176,8 @@ function download(filename, text) {
 
 async function getOutfitList() {
     // get latest items list from fortnite api
-    const itemList = (await (await fetch(`https://fortnite-api.theapinetwork.com/items/list`)).json()).data;
-    //const itemList = (await (await fetch(`list.json`)).json()).data;
-
-    outfitList = [];
-
-    for (let item of itemList) {
-        if(item.item.type === "outfit"){
-            outfitList.push(item);
-        }
-    }
-
-    return outfitList;
+    return (await (await fetch(`https://fortnite-api.com/v2/cosmetics/br/search/all?type=outfit`)).json())
+        .data.filter(outfit => outfit.name != "TBD");
 }
 
 // save data every minute
