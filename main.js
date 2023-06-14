@@ -79,7 +79,7 @@ function getOutfitDiv(name, image) {
 function smash() {
     const outfit = outfitList.splice(current,1)[0];
     smashList.unshift(outfit);
-    smashListStr += getOutfitDiv(outfit.name, outfit.images.icon);
+    smashListStr = getOutfitDiv(outfit.name, outfit.images.icon) + smashListStr;
     smashListElem.innerHTML = smashListStr;
     datasaved = false;
     smashCounter.animate(jumpAnim, jumpAnimTiming);
@@ -89,7 +89,7 @@ function smash() {
 function pass() {
     const outfit = outfitList.splice(current,1)[0];
     passList.unshift(outfit);
-    passListStr += getOutfitDiv(outfit.name, outfit.images.icon);
+    passListStr = getOutfitDiv(outfit.name, outfit.images.icon) + passListStr;
     passListElem.innerHTML = passListStr;
     datasaved = false;
     passCounter.animate(jumpAnim, jumpAnimTiming);
@@ -114,8 +114,8 @@ function saveData(){
 }
 
 function loadData(){
-    const smashids = JSON.parse( (localStorage.getItem('smashlist') ?? '[]')).reverse();
-    const passids = JSON.parse( (localStorage.getItem('passlist') ?? '[]')).reverse();
+    const smashids = JSON.parse( (localStorage.getItem('smashlist') ?? '[]'));
+    const passids = JSON.parse( (localStorage.getItem('passlist') ?? '[]'));
 
     // load smash list
     loadsmash:
@@ -124,8 +124,8 @@ function loadData(){
 
             for (let o in outfitList){
                 if (currid === outfitList[o].id){
-                    smashList.push(outfitList[o]);
-                    smashListStr += getOutfitDiv(outfitList[o].name, outfitList[o].images.icon);
+                    smashList.unshift(outfitList[o]);
+                    smashListStr = getOutfitDiv(outfitList[o].name, outfitList[o].images.icon) + smashListStr;
                     outfitList.splice(o,1);
                     smashids.splice(i, 1);
 
@@ -141,8 +141,8 @@ function loadData(){
 
             for (let o in outfitList){
                 if (currid === outfitList[o].id){
-                    passList.push(outfitList[o]);
-                    passListStr += getOutfitDiv(outfitList[o].name, outfitList[o].images.icon);
+                    passList.unshift(outfitList[o]);
+                    passListStr = getOutfitDiv(outfitList[o].name, outfitList[o].images.icon) + passListStr;
                     outfitList.splice(o,1);
                     passids.splice(i, 1);
 
